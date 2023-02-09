@@ -13,10 +13,37 @@
 html,
 body,
 #viewDiv {
-  padding: 0;
+padding: 0;
   margin: 0;
   height: 100%;
   width: 100%;
+}
+
+.header { 
+  background-color: black;
+  padding: 30px;
+  text-align: center;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  text-align:center;
+}
+
+h1 {
+  font-size:60px;
+  margin:0;
+  padding:30px;
+}
+
+h2 {
+  font-size:45px;
+  margin:0;
+  padding:30px;
+}
+map {
+  display: inline;
+  padding: 20;
+  align-items: center;
 }
 </style>
 
@@ -45,6 +72,30 @@ body,
       container: "viewDiv" // Div element
     });
 
+  // crete a new graphics layer - point
+  const graphicsLayer = new GraphicsLayer();
+  map.add(graphicsLayer);
+
+  const point = { //Create a point
+    type: "point",
+    longitude: -118.80657463861,
+    latitude: 34.0005930608889
+  };
+ const simpleMarkerSymbol = {
+    type: "simple-marker",
+    color: [226, 119, 40],  // Orange
+    outline: {
+        color: [255, 255, 255], // White
+        width: 1
+    }
+  };
+
+ const pointGraphic = new Graphic({
+    geometry: point,
+    symbol: simpleMarkerSymbol
+  });
+ graphicsLayer.add(pointGraphic);
+
   });
 </script>
     
@@ -52,5 +103,3 @@ body,
   <div id="viewDiv"></div>
 </body>
 </html>
-
-
