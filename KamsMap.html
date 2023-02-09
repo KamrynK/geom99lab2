@@ -57,20 +57,77 @@ map {
 
 <!-- call the AGOL function to display the map via the API generated from ArcGIS Developers website -->
 <script>
-  require(["esri/config", "esri/Map", "esri/views/MapView",  "esri/Graphic", "esri/layers/GraphicsLayer"], 
-  function(esriConfig, Map, MapView, Graphic, GraphicsLayer) {
+  require(["esri/config", "esri/Map", "esri/views/MapView",  "esri/Graphic", "esri/layers/GraphicsLayer", 
+  "esri/rest/route","esri/rest/support/RouteParameters","esri/rest/support/FeatureSet"], 
+  // set the functions needed to display map effects
+  function(esriConfig, Map, MapView, Graphic, GraphicsLayer, route, RouteParameters, FeatureSet) {
     esriConfig.apiKey = "AAPKd86bf16d5fbb4fd18e87ffcc73429eb3g9mp9I81MJNKoD74jWp6YDS5XwHbpIgorzVBrRTGgTfexXNUPvRmIumwHnK0aWUu";
     const map = new Map({
-      basemap: "arcgis-topographic" // Basemap layer service
+      basemap: "arcgis-navigation" // Basemap layer service
     });
    
     // Ceneter the map and set the zoom level
     const view = new MapView({
       map: map,
-      center: [-118.805, 34.027], // Longitude, latitude
+      center: [43.6315248,-79.8834278], // Longitude, latitude of my home
       zoom: 13, // Zoom level
       container: "viewDiv" // Div element
     });
+
+    // varaible that defines and references the route service
+    const routeUrl = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World";
+    
+    view.on("click", function(event){
+
+      if (view.graphics.length === 0) {
+        addGraphic("origin", event.mapPoint);
+      } 
+        else if (view.graphics.length === 1) {
+        addGraphic("destination", event.mapPoint);
+
+      } 
+        else {
+        view.graphics.removeAll();
+        addGraphic("origin",event.mapPoint);
+      }
+
+      getRoute(); // Call the route service
+
+    // create the add graphic for the destination marker starting point marker
+    function addGraphic(type, point) {
+      const graphic = new Graphic({
+        symbol: {
+          type: "simple-marker",
+          color: (type === "origin") ? "white" : "black",
+          size: "8px"
+        },
+        geometry: point
+      });
+      view.graphics.add(graphic);
+    }
+
+    // Get the route     
+    function getRoute() {
+      const routeParams = new RouteParameters({
+        stops: new FeatureSet({
+          features: view.graphics.toArray()
+        }),
+
+      });
+
+      route.solve(routeUrl, routeParams)
+        .then(function(data) {
+          data.routeResults.forEach(function(result) {
+            result.route.symbol = {
+              type: "simple-line",
+              color: [5, 150, 255],
+              width: 3
+            };
+            view.graphics.add(result.route);
+          });
+      })
+    }
+  });
 
   // crete a new graphics layer
   const graphicsLayer = new GraphicsLayer();
@@ -79,9 +136,17 @@ map {
   // crete a new graphics layer - point
   const point = { //Create a point
     type: "point",
-    longitude: -118.80657463861,
-    latitude: 34.0005930608889
+    paths: [
+      [43.505986,-79.9417333] // First Workplace - Glen Eden Ski and Snowboard Learning Center 43.505986,-79.9417333
+      [43.6484699,-79.9027417] // Second Workplace - Sportcheck Georgetown
+      [43.5079351,-79.9423384] // Third Workplace - Kelso Conservation Area
+      [43.5764387,-79.8320889] // Fourth Workplace - Tommy Hilfigure Toronto Premium Outlets
+      [43.650538,-79.9102907]  // Fifth Workplace - Real Canadian Superstore Georgetown
+      [43.5872784,-79.9046279] // Sixth Workplace - Dr Bug Urban Pest Control Georgetown
+      [43.736374,-79.6554973] // Seventh Workplace - Brandt Positioning Technology
+    ]
   };
+
   const simpleMarkerSymbol = {
     type: "simple-marker",
     color: [226, 119, 40],  // Orange
@@ -97,65 +162,82 @@ map {
   graphicsLayer.add(pointGraphic);
 
   // crete a new graphics layer - polyline
-  const polyline = {
+  // Glen Eden
+  const glen = {
     type: "polyline",
     paths: [
-        [-118.821527826096, 34.0139576938577], //Longitude, latitude
-        [-118.814893761649, 34.0080602407843], //Longitude, latitude
-        [-118.808878330345, 34.0016642996246]  //Longitude, latitude
+        [43.6315248,-79.8834278], // starting location
+        [43.505986,-79.9417333], // destination 1 - workpalce 1, glen eden
     ]
   };
+
+  // sportcheck
+  const sportcheck = {
+    type: "polyline",
+    paths: [
+        [43.6315248,-79.8834278], // starting location
+        [43.6484699,-79.9027417], // destination 2 - workpalce 2 sportcheck
+    ]
+  };
+
+  // keslo
+  const kelso = {
+    type: "polyline",
+    paths: [
+        [43.6315248,-79.8834278], // starting location
+        [43.5079351,-79.9423384], // destination 3 - workpalce 3 keslo
+    ]
+  };  
+
+  // tommy hilfigure
+  const tommy = {
+    type: "polyline",
+    paths: [
+        [43.6315248,-79.8834278], // starting location
+        [43.5764387,-79.8320889], // destination 4 - workpalce 4 tommy hilfigure
+    ]
+  }; 
+
+  // real canadian super store
+  const rcs = {
+    type: "polyline",
+    paths: [
+        [43.6315248,-79.8834278], // starting location
+        [43.650538,-79.9102907], // destination 5 - workpalce 5 real canadian super store
+    ]
+  }; 
+
+  // dr bug urban pest control
+  const drbug = {
+    type: "polyline",
+    paths: [
+        [43.6315248,-79.8834278], // starting location
+        [43.5872784,-79.9046279], // destination 6 - workpalce 6 dr bug urban pest control
+    ]
+  }; 
+  
+  // nrant positioning technology
+  const brandt = {
+    type: "polyline",
+    paths: [
+        [43.6315248,-79.8834278], // starting location
+        [43.736374,-79.6554973], // destination 7 - workpalce 7 brandt positioning technology
+    ]
+  }; 
+
+
   const simpleLineSymbol = {
     type: "simple-line",
     color: [226, 119, 40], // Orange
     width: 2
   };
   const polylineGraphic = new Graphic({
-    geometry: polyline,
+    geometry: glen, sportcheck, kelso, tommy, rcs, drbug, brandt,
     symbol: simpleLineSymbol
   });
   graphicsLayer.add(polylineGraphic);
 
-  // crete a new graphics layer - polygon
-  const polygon = {
-    type: "polygon",
-    rings: [
-        [-118.818984489994, 34.0137559967283], //Longitude, latitude
-        [-118.806796597377, 34.0215816298725], //Longitude, latitude
-        [-118.791432890735, 34.0163883241613], //Longitude, latitude
-        [-118.79596686535, 34.008564864635],   //Longitude, latitude
-        [-118.808558110679, 34.0035027131376]  //Longitude, latitude
-    ]
-  };
-  // Provide the polygon colour, opacity and fill properties
-  const simpleFillSymbol = {
-    type: "simple-fill",
-    color: [227, 139, 79, 0.8],  // Orange, opacity 80%
-    outline: {
-        color: [255, 255, 255],
-        width: 1
-    }
-  };
-  // Set a pop up for the polygon
-  const popupTemplate = {
-    title: "{Name}",
-    content: "{Description}"
-  }
-  const attributes = {
-    Name: "Graphic",
-    Description: "I am a polygon"
-  }
-
-  const polygonGraphic = new Graphic({
-    geometry: polygon,
-    symbol: simpleFillSymbol,
-
-    attributes: attributes,
-    popupTemplate: popupTemplate
-  });
-  graphicsLayer.add(polygonGraphic);
-
-  });
+});
 </script>
     
 <body>
