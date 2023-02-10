@@ -74,59 +74,59 @@ map {
       container: "viewDiv" // Div element
     });
 
-    // varaible that defines and references the route service
-    const routeUrl = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World";
+    // // varaible that defines and references the route service
+    // const routeUrl = "https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World";
     
-    view.on("click", function(event){
+    // view.on("click", function(event){
 
-      if (view.graphics.length === 0) {
-        addGraphic("origin", event.mapPoint);
-      } 
-        else if (view.graphics.length === 1) {
-        addGraphic("destination", event.mapPoint);
+    //   if (view.graphics.length === 0) {
+    //     addGraphic("origin", event.mapPoint);
+    //   } 
+    //     else if (view.graphics.length === 1) {
+    //     addGraphic("destination", event.mapPoint);
 
-      } 
-        else {
-        view.graphics.removeAll();
-        addGraphic("origin",event.mapPoint);
-      }
+    //   } 
+    //     else {
+    //     view.graphics.removeAll();
+    //     addGraphic("origin",event.mapPoint);
+    //   }
 
-      getRoute(); // Call the route service
+    //   getRoute(); // Call the route service
 
-    // create the add graphic for the destination marker starting point marker
-    function addGraphic(type, point) {
-      const graphic = new Graphic({
-        symbol: {
-          type: "simple-marker",
-          color: (type === "origin") ? "white" : "black",
-          size: "8px"
-        },
-        geometry: point
-      });
-      view.graphics.add(graphic);
-    }
+    // // create the add graphic for the destination marker starting point marker
+    // function addGraphic(type, point) {
+    //   const graphic = new Graphic({
+    //     symbol: {
+    //       type: "simple-marker",
+    //       color: (type === "origin") ? "white" : "black",
+    //       size: "8px"
+    //     },
+    //     geometry: point
+    //   });
+    //   view.graphics.add(graphic);
+    // }
 
-    // Get the route     
-    function getRoute() {
-      const routeParams = new RouteParameters({
-        stops: new FeatureSet({
-          features: view.graphics.toArray()
-        }),
+    // // Get the route     
+    // function getRoute() {
+    //   const routeParams = new RouteParameters({
+    //     stops: new FeatureSet({
+    //       features: view.graphics.toArray()
+    //     }),
 
-      });
+    //   });
 
-      route.solve(routeUrl, routeParams)
-        .then(function(data) {
-          data.routeResults.forEach(function(result) {
-            result.route.symbol = {
-              type: "simple-line",
-              color: [5, 150, 255],
-              width: 3
-            };
-            view.graphics.add(result.route);
-          });
-      })
-    }
+    //   route.solve(routeUrl, routeParams)
+    //     .then(function(data) {
+    //       data.routeResults.forEach(function(result) {
+    //         result.route.symbol = {
+    //           type: "simple-line",
+    //           color: [5, 150, 255],
+    //           width: 3
+    //         };
+    //         view.graphics.add(result.route);
+    //       });
+    //   })
+    // }
   });
 
   // crete a new graphics layer
@@ -161,81 +161,81 @@ map {
   });
   graphicsLayer.add(pointGraphic);
 
-  // crete a new graphics layer - polyline
-  // Glen Eden
-  const glen = {
-    type: "polyline",
-    paths: [
-        [43.6315248,-79.8834278], // starting location
-        [43.505986,-79.9417333], // destination 1 - workpalce 1, glen eden
-    ]
-  };
+  // // crete a new graphics layer - polyline
+  // // Glen Eden
+  // const glen = {
+  //   type: "polyline",
+  //   paths: [
+  //       [43.6315248,-79.8834278], // starting location
+  //       [43.505986,-79.9417333], // destination 1 - workpalce 1, glen eden
+  //   ]
+  // };
 
-  // sportcheck
-  const sportcheck = {
-    type: "polyline",
-    paths: [
-        [43.6315248,-79.8834278], // starting location
-        [43.6484699,-79.9027417], // destination 2 - workpalce 2 sportcheck
-    ]
-  };
+  // // sportcheck
+  // const sportcheck = {
+  //   type: "polyline",
+  //   paths: [
+  //       [43.6315248,-79.8834278], // starting location
+  //       [43.6484699,-79.9027417], // destination 2 - workpalce 2 sportcheck
+  //   ]
+  // };
 
-  // keslo
-  const kelso = {
-    type: "polyline",
-    paths: [
-        [43.6315248,-79.8834278], // starting location
-        [43.5079351,-79.9423384], // destination 3 - workpalce 3 keslo
-    ]
-  };  
+  // // keslo
+  // const kelso = {
+  //   type: "polyline",
+  //   paths: [
+  //       [43.6315248,-79.8834278], // starting location
+  //       [43.5079351,-79.9423384], // destination 3 - workpalce 3 keslo
+  //   ]
+  // };  
 
-  // tommy hilfigure
-  const tommy = {
-    type: "polyline",
-    paths: [
-        [43.6315248,-79.8834278], // starting location
-        [43.5764387,-79.8320889], // destination 4 - workpalce 4 tommy hilfigure
-    ]
-  }; 
+  // // tommy hilfigure
+  // const tommy = {
+  //   type: "polyline",
+  //   paths: [
+  //       [43.6315248,-79.8834278], // starting location
+  //       [43.5764387,-79.8320889], // destination 4 - workpalce 4 tommy hilfigure
+  //   ]
+  // }; 
 
-  // real canadian super store
-  const rcs = {
-    type: "polyline",
-    paths: [
-        [43.6315248,-79.8834278], // starting location
-        [43.650538,-79.9102907], // destination 5 - workpalce 5 real canadian super store
-    ]
-  }; 
+  // // real canadian super store
+  // const rcs = {
+  //   type: "polyline",
+  //   paths: [
+  //       [43.6315248,-79.8834278], // starting location
+  //       [43.650538,-79.9102907], // destination 5 - workpalce 5 real canadian super store
+  //   ]
+  // }; 
 
-  // dr bug urban pest control
-  const drbug = {
-    type: "polyline",
-    paths: [
-        [43.6315248,-79.8834278], // starting location
-        [43.5872784,-79.9046279], // destination 6 - workpalce 6 dr bug urban pest control
-    ]
-  }; 
+  // // dr bug urban pest control
+  // const drbug = {
+  //   type: "polyline",
+  //   paths: [
+  //       [43.6315248,-79.8834278], // starting location
+  //       [43.5872784,-79.9046279], // destination 6 - workpalce 6 dr bug urban pest control
+  //   ]
+  // }; 
   
-  // nrant positioning technology
-  const brandt = {
-    type: "polyline",
-    paths: [
-        [43.6315248,-79.8834278], // starting location
-        [43.736374,-79.6554973], // destination 7 - workpalce 7 brandt positioning technology
-    ]
-  }; 
+  // // nrant positioning technology
+  // const brandt = {
+  //   type: "polyline",
+  //   paths: [
+  //       [43.6315248,-79.8834278], // starting location
+  //       [43.736374,-79.6554973], // destination 7 - workpalce 7 brandt positioning technology
+  //   ]
+  // }; 
 
 
-  const simpleLineSymbol = {
-    type: "simple-line",
-    color: [226, 119, 40], // Orange
-    width: 2
-  };
-  const polylineGraphic = new Graphic({
-    geometry: glen, sportcheck, kelso, tommy, rcs, drbug, brandt,
-    symbol: simpleLineSymbol
-  });
-  graphicsLayer.add(polylineGraphic);
+  // const simpleLineSymbol = {
+  //   type: "simple-line",
+  //   color: [226, 119, 40], // Orange
+  //   width: 2
+  // };
+  // const polylineGraphic = new Graphic({
+  //   geometry: glen, sportcheck, kelso, tommy, rcs, drbug, brandt,
+  //   symbol: simpleLineSymbol
+  // });
+  // graphicsLayer.add(polylineGraphic);
 
 });
 </script>
